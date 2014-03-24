@@ -1,0 +1,7 @@
+*.o
+*.mem
+m5out
+*.out
+*.swp
+*.pyc
+
