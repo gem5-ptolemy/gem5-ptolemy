@@ -2,7 +2,7 @@
 # Generated automatically by configure.
 # Run this file to recreate the current configuration.
 # This directory was configured as follows,
-# on host trip.eecs.umich.edu:
+# on host ubuntu:
 #
 # ./configure  --cache-file=.././config.cache --srcdir=.
 #
@@ -63,16 +63,16 @@ s%@INSTALL_SCRIPT@%${INSTALL_PROGRAM}%g
 s%@INSTALL_DATA@%${INSTALL} -m 644%g
 s%@PACKAGE@%libz%g
 s%@VERSION@%1.1.3%g
-s%@ACLOCAL@%aclocal%g
-s%@AUTOCONF@%autoconf%g
-s%@AUTOMAKE@%automake%g
-s%@AUTOHEADER@%autoheader%g
-s%@MAKEINFO@%makeinfo%g
+s%@ACLOCAL@%/home/hokeunkim/MacDevelopment/EE219D/MiBench/consumer/mad/mad-0.14.2b/missing aclocal%g
+s%@AUTOCONF@%/home/hokeunkim/MacDevelopment/EE219D/MiBench/consumer/mad/mad-0.14.2b/missing autoconf%g
+s%@AUTOMAKE@%/home/hokeunkim/MacDevelopment/EE219D/MiBench/consumer/mad/mad-0.14.2b/missing automake%g
+s%@AUTOHEADER@%/home/hokeunkim/MacDevelopment/EE219D/MiBench/consumer/mad/mad-0.14.2b/missing autoheader%g
+s%@MAKEINFO@%/home/hokeunkim/MacDevelopment/EE219D/MiBench/consumer/mad/mad-0.14.2b/missing makeinfo%g
 s%@SET_MAKE@%%g
-s%@host@%i686-pc-linux-gnu%g
-s%@host_alias@%i686-pc-linux-gnu%g
-s%@host_cpu@%i686%g
-s%@host_vendor@%pc%g
+s%@host@%x86_64-unknown-linux-gnu%g
+s%@host_alias@%x86_64-unknown-linux-gnu%g
+s%@host_cpu@%x86_64%g
+s%@host_vendor@%unknown%g
 s%@host_os@%linux-gnu%g
 s%@CC@%gcc%g
 s%@RANLIB@%ranlib%g

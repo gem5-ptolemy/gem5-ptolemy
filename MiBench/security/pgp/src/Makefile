@@ -55,9 +55,9 @@ CFLAGS= -O -DUNIX -DPORTABLE $(BYTEORDER)
 # must set byte order for targets "sysv" and "bsd"
 # BYTEORDER= -DHIGHFIRST
 
-CC      = cc
-LD      = cc            # Link command
-LDFLAGS = 
+CC      = arm-linux-gnueabi-gcc -static
+LD      = arm-linux-gnueabi-gcc            # Link command
+LDFLAGS = -static
 CPP     = $(CC) -E
 DBG     = -O
 RM      = rm -f

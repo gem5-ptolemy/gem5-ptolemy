@@ -1,5 +1,5 @@
 BINDIR='/usr/local/bin'
-CC='gcc'
+CC='arm-linux-gnueabi-gcc -static'
 CFLAGS='-O2 -g'
 COUNTSUFFIX='.cnt'
 DEFHASH='english.hash'

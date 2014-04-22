@@ -11,7 +11,7 @@ hplay=dummy
 dbm=none
 make_dist=/dev/null 
 
-AC_PREFIX_PROGRAM(gcc)
+AC_PREFIX_PROGRAM(arm-linux-gnueabi-gcc)
 
 if test -z "$CC" && test -n "$GCC" ; then
 CC=$GCC

@@ -301,8 +301,8 @@ PDF_COMPRESSION	= 0
 ZLIB		=
 ZLIBPATH	=
 
-CC	= gcc
-LD	= gcc -static
+CC	= arm-linux-gnueabi-gcc -static
+LD	= arm-linux-gnueabi-gcc -static
 
 RCOPY	= cp -r
 

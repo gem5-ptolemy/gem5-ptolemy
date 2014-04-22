@@ -3,7 +3,7 @@
 # To make smaller object code, but run a little slower, don't use UNROLL_LOOPS.
 # To use NIST's modified SHA of 7/11/94, define USE_MODIFIED_SHA
 
-CC = gcc
+CC = arm-linux-gnueabi-gcc -static
 CFLAGS = -O3 -Wall
 
 sha:	sha_driver.o sha.o

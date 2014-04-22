@@ -11,8 +11,8 @@ ARCH = $(shell uname -m)
 
 # defaults:
 PGM = lame
-CC = gcc
-CC_OPTS =  -O
+CC = arm-linux-gnueabi-gcc
+CC_OPTS = -static -O
 GTK = 
 GTKLIBS = 
 SNDLIB = -DLAMESNDFILE

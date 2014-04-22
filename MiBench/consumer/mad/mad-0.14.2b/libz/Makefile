@@ -40,10 +40,10 @@ pkgincludedir = $(includedir)/libz
 
 top_builddir = .
 
-ACLOCAL = aclocal
-AUTOCONF = autoconf
-AUTOMAKE = automake
-AUTOHEADER = autoheader
+ACLOCAL = /home/hokeunkim/MacDevelopment/EE219D/MiBench/consumer/mad/mad-0.14.2b/missing aclocal
+AUTOCONF = /home/hokeunkim/MacDevelopment/EE219D/MiBench/consumer/mad/mad-0.14.2b/missing autoconf
+AUTOMAKE = /home/hokeunkim/MacDevelopment/EE219D/MiBench/consumer/mad/mad-0.14.2b/missing automake
+AUTOHEADER = /home/hokeunkim/MacDevelopment/EE219D/MiBench/consumer/mad/mad-0.14.2b/missing autoheader
 
 INSTALL = /usr/bin/install -c
 INSTALL_PROGRAM = ${INSTALL} $(AM_INSTALL_PROGRAM_FLAGS)
@@ -57,10 +57,10 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-host_alias = i686-pc-linux-gnu
-host_triplet = i686-pc-linux-gnu
+host_alias = x86_64-unknown-linux-gnu
+host_triplet = x86_64-unknown-linux-gnu
 CC = gcc
-MAKEINFO = makeinfo
+MAKEINFO = /home/hokeunkim/MacDevelopment/EE219D/MiBench/consumer/mad/mad-0.14.2b/missing makeinfo
 PACKAGE = libz
 RANLIB = ranlib
 VERSION = 1.1.3
