@@ -4,4 +4,7 @@ m5out
 *.out
 *.swp
 *.pyc
+*.d
+*.lo
+*.la
 
