@@ -42,6 +42,7 @@
 import sys
 from os import getcwd
 from os.path import join as joinpath
+import pipes
 
 import CpuConfig
 import MemConfig
@@ -50,6 +51,31 @@ import m5
 from m5.defines import buildEnv
 from m5.objects import *
 from m5.util import *
+
+def redirect_stdout(file_name):
+  print "Redirecting stdout"
+  sys.stdout.flush() # <--- important when redirecting to files
+  newstdout = os.dup(1)
+  #devnull = os.open(os.devnull, os.O_WRONLY)
+  devnull = os.open(file_name, os.O_CREAT | os.O_TRUNC | os.O_WRONLY)
+  os.dup2(devnull, 1)
+  os.close(devnull)
+  sys.stdout = os.fdopen(newstdout, 'w')
+
+class RedirectStdStreams(object):
+  def __init__(self, stdout=None, stderr=None):
+    self._stdout = stdout or sys.stdout
+    self._stderr = stderr or sys.stderr
+
+  def __enter__(self):
+    self.old_stdout, self.old_stderr = sys.stdout, sys.stderr
+    self.old_stdout.flush(); self.old_stderr.flush()
+    sys.stdout, sys.stderr = self._stdout, self._stderr
+
+  def __exit__(self, exc_type, exc_value, traceback):
+    self._stdout.flush(); self._stderr.flush()
+    sys.stdout = self.old_stdout
+    sys.stderr = self.old_stderr
 
 addToPath('../common')
 
@@ -499,6 +525,7 @@ def run(options, root, testsys, cpu_class):
         if options.fast_forward:
             m5.stats.reset()
         print "**** REAL SIMULATION ****"
+        sys.stderr.write("**** REAL SIMULATION ****\n")
 
         # If checkpoints are being taken, then the checkpoint instruction
         # will occur in the benchmark code it self.
@@ -509,13 +536,14 @@ def run(options, root, testsys, cpu_class):
             exit_event = benchCheckpoints(options, maxtick, cptdir)
 
     print 'Exiting @ tick %i because %s' % (m5.curTick(), exit_event.getCause())
+    sys.stderr.write('Exiting @ tick ' + str(m5.curTick()) + ' because ' + str(exit_event.getCause()) + '\n')
     if options.checkpoint_at_end:
         m5.checkpoint(joinpath(cptdir, "cpt.%d"))
 
     if not m5.options.interactive:
         sys.exit(exit_event.getCode())
 
-def run_interactive(options, root, testsys, cpu_class):
+def run_interactive(options, root, testsys, cpu_class, pipe_name, step_size, iteration):
     if options.checkpoint_dir:
         cptdir = options.checkpoint_dir
     elif m5.options.outdir:
@@ -707,13 +735,42 @@ def run_interactive(options, root, testsys, cpu_class):
         fatal("Bad maxtick (%d) specified: " \
               "Checkpoint starts starts from tick: %d", maxtick, cpt_starttick)
 
-    print 'i\'m here now!'
-    m5.simulate(10000)
-    print 'i\'m here now!'
-    m5.simulate(10000)
-    print 'i\'m here now!'
-    m5.simulate(10000)
+#t = pipes.Template()
+#t.append('tr a-z A-Z', '--')
+#f = t.open(pipe_name, 'w')
 
+#read_pipe = pipes.Template()
+#read_pipe.append('tr a-z A-Z', '--')
+#read_pipe_f = read_pipe.open(pipe_name + '_read', 'r')
+    
+    redirect_stdout(pipe_name)
+    for i in range(iteration):
+      print 'iteration: ' + str(i+0)
+      m5.simulate(step_size * 500)
+      print 'iteration finished'
+#line = read_pipe_f.read()
+#sys.stdout.flush()
+      line = sys.stdin.readline()
+
+#    f.close()
+    '''
+    print 'i\'m here now! 1 writing to pipe!'
+    #with RedirectStdStreams(stdout=f, stderr=f):
+
+    m5.simulate(30000)
+    line = sys.stdin.readline()
+    #sys.stdout = temp
+    print 'i\'m here now! 2 writing to stdout'
+    m5.simulate(30000)
+    line = sys.stdin.readline()
+    #temp = sys.stdout
+    #sys.stdout = f
+    print 'i\'m here now! 3 writing to pipe!'
+    m5.simulate(30000)
+    line = sys.stdin.readline()
+    #sys.stdout = f
+    '''
+    '''
     if options.standard_switch or cpu_class:
         if options.standard_switch:
             print "Switch at instruction count:%s" % \
@@ -772,10 +829,11 @@ def run_interactive(options, root, testsys, cpu_class):
                                       maxtick, options.repeat_switch)
         else:
             exit_event = benchCheckpoints(options, maxtick, cptdir)
+    '''
+    #print 'Exiting @ tick %i because %s' % (m5.curTick(), exit_event.getCause())
+    print 'Exiting @ tick %i because %s' % (m5.curTick(), 'iterations are done')
+    #if options.checkpoint_at_end:
+    #    m5.checkpoint(joinpath(cptdir, "cpt.%d"))
 
-    print 'Exiting @ tick %i because %s' % (m5.curTick(), exit_event.getCause())
-    if options.checkpoint_at_end:
-        m5.checkpoint(joinpath(cptdir, "cpt.%d"))
-
-    if not m5.options.interactive:
-        sys.exit(exit_event.getCode())
+    #if not m5.options.interactive:
+    #    sys.exit(exit_event.getCode())
