@@ -23,8 +23,8 @@ exe = " -c ../wcet_bench/matmult.o"
 
 print 'starting the simulation!!!'
 
-line = sys.stdin.readline()
-#os.system(sim + sim_opt + conf + conf_opt +  exe)
-args= shlex.split(sim + sim_opt + conf + conf_opt +  exe)
-Popen(args)
+#line = sys.stdin.readline()
+os.system(sim + sim_opt + conf + conf_opt +  exe)
+#args= shlex.split(sim + sim_opt + conf + conf_opt +  exe)
+#Popen(args)
 

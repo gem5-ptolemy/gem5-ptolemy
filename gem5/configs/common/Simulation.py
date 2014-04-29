@@ -742,15 +742,35 @@ def run_interactive(options, root, testsys, cpu_class, pipe_name, step_size, ite
 #read_pipe = pipes.Template()
 #read_pipe.append('tr a-z A-Z', '--')
 #read_pipe_f = read_pipe.open(pipe_name + '_read', 'r')
+ 
+    read_fifo_name = 'read_pipe'
+    write_fifo_name = 'write_pipe'
+
+    if os.path.exists(read_fifo_name):
+      os.unlink(read_fifo_name)
+    if os.path.exists(write_fifo_name):
+      os.unlink(write_fifo_name)
     
+    os.mkfifo(read_fifo_name)
+    os.mkfifo(write_fifo_name)
+
+    read_fifo = 0
+    write_fifo = 0
+
     redirect_stdout(pipe_name)
     for i in range(iteration):
+      read_fifo = os.open(read_fifo_name, os.O_RDONLY)
+      os.read(read_fifo, 256)
+      os.close(read_fifo)
       print 'iteration: ' + str(i+0)
       m5.simulate(step_size * 500)
-      print 'iteration finished'
+      print 'iteration ' + str(i+0) + ' finished'
+      write_fifo = os.open(write_fifo_name, os.O_WRONLY)
+      os.write(write_fifo, 'finished')
+      os.close(write_fifo)
 #line = read_pipe_f.read()
 #sys.stdout.flush()
-      line = sys.stdin.readline()
+#line = sys.stdin.readline()
 
 #    f.close()
     '''

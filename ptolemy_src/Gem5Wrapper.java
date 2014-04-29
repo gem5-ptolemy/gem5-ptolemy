@@ -176,6 +176,20 @@ public class Gem5Wrapper extends SequenceSource {
      *  throws it.
      */
     public void fire() throws IllegalActionException {
+    	try {
+        	int line;
+	        while (true) {
+	        	char[] cbuf = new char[256];
+	        	line = is.read(cbuf);
+	        	if (line != -1) {
+	        		break;
+	        	}
+	        }
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
         init.update();
         super.fire();
         String everything = null;
@@ -195,25 +209,7 @@ public class Gem5Wrapper extends SequenceSource {
         StringToken stringToken = new StringToken("*************Iteration Count: " + _iterationCount + "\n" + everything);
         output.send(0, stringToken);
         _iterationCount++;
-        
-    	try {
-			//os.write("\n");
-			os.newLine();
-			os.flush();
-        	String line;
-	        while (true) {
-	        	line = in.readLine();
-	        	if (line != null) {
-	        		System.out.println(line);
-	        		if (line.equals("iteration finished")) {
-	        			break;
-	        		}
-	        	}
-	        }
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
         /*
         try {
 			Thread.sleep(1000);
@@ -246,35 +242,42 @@ public class Gem5Wrapper extends SequenceSource {
         		process.destroy();
         		process = null;
         		os = null;
-        		in = null;
+        		is = null;
         	}
         	/*
         	ProcessBuilder pb = new ProcessBuilder(
 					"/Users/hokeunkim/Development/EE219D/gem5/interactive_sim.py");
         	pb.directory(new File("/Users/hokeunkim/Development/EE219D/gem5/"));
         	*/
+        	/*
         	Runtime rt = Runtime.getRuntime();
         	//process = rt.exec("ls");
         	String[] cmd = new String[2];
         	cmd[0] = "cd /Users/hokeunkim/Development/EE219D/gem5/";
         	cmd[1] = "./interactive_sim.py";
         	process = rt.exec("./interactive_sim.py", null, new File("/Users/hokeunkim/Development/EE219D/gem5/"));
-        	in = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        	os = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
 
+        	
+        	BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()));
         	//process.waitFor();
         	String line;
-			os.newLine();
-			os.flush();
 	        while (true) {
 	        	line = in.readLine();
 	        	if (line != null) {
 	        		System.out.println(line);
-	        		if (line.equals("Redirecting stdout")) {
+	        		if (line.equals("Global frequency set at 1000000000000 ticks per second")) {
 	        			break;
 	        		}
 	        	}
 	        }
+	        */
+        	String outputFileName = "/Users/hokeunkim/Development/EE219D/gem5/read_pipe";
+        	os = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(outputFileName))));
+
+			os.newLine();
+			os.flush();
+        	String inputFileName = "/Users/hokeunkim/Development/EE219D/gem5/write_pipe";
+        	is = new InputStreamReader(new FileInputStream(new File(inputFileName)));
 			//process = pb.start();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -377,6 +380,15 @@ public class Gem5Wrapper extends SequenceSource {
     public boolean postfire() throws IllegalActionException {
         step.update();
         _stateToken = _stateToken.add(step.getToken());
+        
+		try {
+			os.newLine();
+			os.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
         return super.postfire();
     }
 
@@ -389,5 +401,5 @@ public class Gem5Wrapper extends SequenceSource {
     private BufferedReader br;
     private Process process;
     private BufferedWriter os;
-    private BufferedReader in;
+    private InputStreamReader is;
 }
