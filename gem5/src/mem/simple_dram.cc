@@ -906,6 +906,14 @@ SimpleDRAM::estimateLatency(DRAMPacket* dram_pkt, Tick inTime)
     rowHitFlag = false;
     Tick potentialActTick;
 
+    string commandStr;
+    if (dram_pkt->isRead) {
+      commandStr = "READ";
+    }
+    else {
+      commandStr = "WRITE";
+    }
+
     const Bank& bank = dram_pkt->bankRef;
      // open-page policy
     if (pageMgmt == Enums::open || pageMgmt == Enums::open_adaptive) {
@@ -929,6 +937,8 @@ SimpleDRAM::estimateLatency(DRAMPacket* dram_pkt, Tick inTime)
                accLat += tCL;
                bankLat += tCL;
             }
+            DPRINTF(DRAM, "PTOLEMY_LOG: Rank: %d Bank:%d %s: %d\n",
+                dram_pkt->rank, dram_pkt->bank, commandStr.c_str(), 0);
 
         } else {
             // Row-buffer miss, need to close existing row
@@ -950,6 +960,15 @@ SimpleDRAM::estimateLatency(DRAMPacket* dram_pkt, Tick inTime)
 
             accLat += precharge_delay + tRCD + tCL;
             bankLat += precharge_delay + tRCD + tCL;
+            // Hokeun - recording memory commands
+            if (precharge_delay == 0) {
+              DPRINTF(DRAM, "PTOLEMY_LOG: Rank: %d Bank:%d ACT: %d %s: %d\n",
+                  dram_pkt->rank, dram_pkt->bank, 0, commandStr.c_str(), tRCD);
+            }
+            else {
+              DPRINTF(DRAM, "PTOLEMY_LOG: Rank: %d Bank:%d PRE: %d ACT: %d %s: %d\n",
+                  dram_pkt->rank, dram_pkt->bank, 0, precharge_delay, commandStr.c_str(), precharge_delay + tRCD);
+            }
         }
     } else if (pageMgmt == Enums::close) {
         // With a close page policy, no notion of
@@ -966,6 +985,10 @@ SimpleDRAM::estimateLatency(DRAMPacket* dram_pkt, Tick inTime)
         // add cas latency
         accLat += tRCD + tCL;
         bankLat += tRCD + tCL;
+
+        // Hokeun - recording memory commands
+        DPRINTF(DRAM, "PTOLEMY_LOG: Rank: %d Bank:%d ACT: %d %s: %d PRE: %d\n",
+            dram_pkt->rank, dram_pkt->bank, 0, commandStr.c_str(), tRCD, tRAS);
     } else
         panic("No page management policy chosen\n");
 
