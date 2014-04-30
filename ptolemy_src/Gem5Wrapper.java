@@ -197,8 +197,10 @@ public class Gem5Wrapper extends SequenceSource {
 			StringBuilder sb = new StringBuilder();
 			String line = br.readLine();
 	        while (line != null) {
-	            sb.append(line);
-	            sb.append(System.lineSeparator());
+	        	if (line.contains("PTOLEMY_LOG")) {
+		            sb.append(line);
+		            sb.append(System.lineSeparator());
+	        	}
 	            line = br.readLine();
 	        }
 	        everything = sb.toString();

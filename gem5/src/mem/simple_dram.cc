@@ -1340,6 +1340,7 @@ void
 SimpleDRAM::processRefreshEvent()
 {
     DPRINTF(DRAM, "Refreshing at tick %ld\n", curTick());
+    DPRINTF(DRAM, "PTOLEMY_LOG: REF: %d\n", 0);
 
     Tick banksFree = std::max(curTick(), maxBankFreeAt()) + tRFC;
 
