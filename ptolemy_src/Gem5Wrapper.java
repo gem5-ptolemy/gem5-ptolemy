@@ -28,13 +28,19 @@
 package dummy;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 
+import ptolemy.data.type.*;
 import ptolemy.actor.Manager;
 import ptolemy.actor.lib.*;
 import ptolemy.actor.parameters.PortParameter;
+import ptolemy.data.ArrayToken;
 import ptolemy.data.BooleanToken;
+import ptolemy.data.IntToken;
 import ptolemy.data.StringToken;
 import ptolemy.data.Token;
+import ptolemy.data.TupleToken;
 import ptolemy.data.expr.Parameter;
 import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.Attribute;
@@ -93,8 +99,11 @@ public class Gem5Wrapper extends SequenceSource {
         new Parameter(step.getPort(), "_showName", BooleanToken.TRUE);
 
         // set the type constraints.
-        output.setTypeAtLeast(init);
-        output.setTypeAtLeast(step);
+        //output.setTypeAtLeast(init);
+        //output.setTypeAtLeast(step);
+        output.setTypeEquals(BaseType.UNKNOWN);
+        output.setAutomaticTypeConversion(true);
+        //output.setTypeEquals(BaseType.Arra);
 
         _attachText("_iconDescription", "<svg>\n"
                 + "<rect x=\"-30\" y=\"-20\" " + "width=\"60\" height=\"40\" "
@@ -192,42 +201,61 @@ public class Gem5Wrapper extends SequenceSource {
     	
         init.update();
         super.fire();
-        String everything = null;
+		StringBuilder sb = new StringBuilder();
+        ArrayList<ArrayToken> tokenArray = new ArrayList<ArrayToken>();
 		try {
-			StringBuilder sb = new StringBuilder();
 			String line = br.readLine();
 	        while (line != null) {
 	        	if (line.contains("PTOLEMY_LOG")) {
+
+	        		StringToken[] tuple = new StringToken[2];
+	        		StringTokenizer strTokenizer = new StringTokenizer(line);
+	        		boolean isCommand = false;
+	        		String command = "";
+	        		int delay = 0;
+	        		while (strTokenizer.hasMoreTokens()) {
+	        			String curToken = strTokenizer.nextToken();
+	        			if (isCommand) {
+	        				delay = Integer.parseInt(curToken);
+	        				tuple[0] = new StringToken(command);
+	        				tuple[1] = new StringToken(Integer.toString(delay));
+	        				tokenArray.add(new ArrayToken(BaseType.STRING,tuple));
+	        				isCommand = false;
+	        			}
+	        			if (curToken.contains("PRE") || curToken.contains("ACT")
+	        					|| curToken.contains("READ") || curToken.contains("WRITE")) {
+	        				command = new String(curToken);
+	        				isCommand = true;
+	        			}
+	        		}
 		            sb.append(line);
 		            sb.append(System.lineSeparator());
 	        	}
 	            line = br.readLine();
 	        }
-	        everything = sb.toString();
+	        //everything = sb.toString();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        StringToken stringToken = new StringToken("*************Iteration Count: " + _iterationCount + "\n" + everything);
-        output.send(0, stringToken);
-        _iterationCount++;
+				
+        StringToken stringToken = new StringToken("*************Iteration Count: " + _iterationCount + "\n" + sb.toString());
+        //ArrayToken[] tokenArr = new ArrayToken[tokenArray.size()];
+		//tokenArr = tokenArray.toArray(tokenArr);
+        ArrayToken[] dummy = new ArrayToken[0];
+        StringToken[] temp = new StringToken[1];
+        //temp[0] = new StringToken("hokeun");
+		ArrayToken arrayToken = new ArrayToken(tokenArray.toArray(dummy));
+		//ArrayToken arrayToken = new ArrayToken(BaseType.STRING, temp);
+		//new ArrayToken()
+		output.setAutomaticTypeConversion(true);
+		//output.setTypeAtLeast(arrayToken.getType());
 
-        /*
-        try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		*/
-        /*
-        String newline = new String("\n");
-        try {
-			os.write(newline.getBytes());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
+        ArrayType commandType = new ArrayType(BaseType.STRING, 2);
+        ArrayType arrayOfCommandsType = new ArrayType(commandType, arrayToken.length());
+		output.setTypeEquals(arrayOfCommandsType);
+        output.send(0, arrayToken);
+        _iterationCount++;
     }
 
     /** Set the state to equal the value of the <i>init</i> parameter.
@@ -246,33 +274,7 @@ public class Gem5Wrapper extends SequenceSource {
         		os = null;
         		is = null;
         	}
-        	/*
-        	ProcessBuilder pb = new ProcessBuilder(
-					"/Users/hokeunkim/Development/EE219D/gem5/interactive_sim.py");
-        	pb.directory(new File("/Users/hokeunkim/Development/EE219D/gem5/"));
-        	*/
-        	/*
-        	Runtime rt = Runtime.getRuntime();
-        	//process = rt.exec("ls");
-        	String[] cmd = new String[2];
-        	cmd[0] = "cd /Users/hokeunkim/Development/EE219D/gem5/";
-        	cmd[1] = "./interactive_sim.py";
-        	process = rt.exec("./interactive_sim.py", null, new File("/Users/hokeunkim/Development/EE219D/gem5/"));
-
         	
-        	BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        	//process.waitFor();
-        	String line;
-	        while (true) {
-	        	line = in.readLine();
-	        	if (line != null) {
-	        		System.out.println(line);
-	        		if (line.equals("Global frequency set at 1000000000000 ticks per second")) {
-	        			break;
-	        		}
-	        	}
-	        }
-	        */
         	String outputFileName = "/Users/hokeunkim/Development/EE219D/gem5/read_pipe";
         	os = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(outputFileName))));
 
