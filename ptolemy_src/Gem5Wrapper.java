@@ -32,15 +32,18 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 import ptolemy.data.type.*;
+import ptolemy.data.type.BaseType.GeneralType;
 import ptolemy.actor.Manager;
 import ptolemy.actor.lib.*;
 import ptolemy.actor.parameters.PortParameter;
 import ptolemy.data.ArrayToken;
 import ptolemy.data.BooleanToken;
 import ptolemy.data.IntToken;
+import ptolemy.data.RecordToken;
 import ptolemy.data.StringToken;
 import ptolemy.data.Token;
 import ptolemy.data.TupleToken;
+import ptolemy.data.UnionToken;
 import ptolemy.data.expr.Parameter;
 import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.Attribute;
@@ -48,6 +51,7 @@ import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.InternalErrorException;
 import ptolemy.kernel.util.NameDuplicationException;
 import ptolemy.kernel.util.Workspace;
+import ptolemy.vergil.toolbox.ArrayOfRecordsConfigureFactory;
 
 ///////////////////////////////////////////////////////////////////
 //// Ramp
@@ -97,12 +101,18 @@ public class Gem5Wrapper extends SequenceSource {
         step = new PortParameter(this, "step");
         step.setExpression("1");
         new Parameter(step.getPort(), "_showName", BooleanToken.TRUE);
-
+        
         // set the type constraints.
         //output.setTypeAtLeast(init);
         //output.setTypeAtLeast(step);
-        output.setTypeEquals(BaseType.UNKNOWN);
-        output.setAutomaticTypeConversion(true);
+        ArrayType arrayOfCommandsType = new ArrayType(BaseType.GENERAL, 318);
+		//output.setTypeEquals(arrayOfCommandsType);
+    	String[] labels = {"cmd", "time", "rank", "bank"};
+    	Type[] types = {BaseType.STRING, BaseType.INT, BaseType.INT, BaseType.INT};
+        RecordType recordType = new RecordType(labels, types);
+        ArrayType arrayOfRecordsType = new ArrayType(recordType);
+        output.setTypeEquals(arrayOfRecordsType);
+        output.setAutomaticTypeConversion(false);
         //output.setTypeEquals(BaseType.Arra);
 
         _attachText("_iconDescription", "<svg>\n"
@@ -110,7 +120,6 @@ public class Gem5Wrapper extends SequenceSource {
                 + "style=\"fill:white\"/>\n"
                 + "<polygon points=\"-20,10 20,-10 20,10\" "
                 + "style=\"fill:grey\"/>\n" + "</svg>\n");
-        _resultArray = new Token[1];
 
         // Show the firingCountLimit parameter last.
         firingCountLimit.moveToLast();
@@ -146,6 +155,8 @@ public class Gem5Wrapper extends SequenceSource {
      */
     public void attributeChanged(Attribute attribute)
             throws IllegalActionException {
+        super.attributeChanged(attribute);
+    	/*
         if (attribute == init) {
             // If type resolution has happened (the model is running),
             // then update the current state.
@@ -157,9 +168,11 @@ public class Gem5Wrapper extends SequenceSource {
                     _stateToken = output.getType().convert(init.getToken());
                 }
             }
-        } else {
+        } 
+        else {
             super.attributeChanged(attribute);
         }
+        */
     }
 
     /** Clone the actor into the specified workspace. This calls the
@@ -176,15 +189,11 @@ public class Gem5Wrapper extends SequenceSource {
         // set the type constraints.
         newObject.output.setTypeAtLeast(newObject.init);
         newObject.output.setTypeAtLeast(newObject.step);
-        _resultArray = new Token[1];
         return newObject;
     }
 
-    /** Send the current value of the state of this actor to the output.
-     *  @exception IllegalActionException If calling send() or super.fire()
-     *  throws it.
-     */
-    public void fire() throws IllegalActionException {
+    private ArrayToken getGem5SimResult() throws IllegalActionException {
+
     	try {
         	int line;
 	        while (true) {
@@ -198,17 +207,16 @@ public class Gem5Wrapper extends SequenceSource {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    	
-        init.update();
-        super.fire();
+    	String[] labels = {"cmd", "time", "rank", "bank"};
+    	Type[] types = {BaseType.STRING, BaseType.INT, BaseType.INT, BaseType.INT};
 		StringBuilder sb = new StringBuilder();
-        ArrayList<ArrayToken> tokenArray = new ArrayList<ArrayToken>();
+        ArrayList<RecordToken> tokenArray = new ArrayList<RecordToken>();
 		try {
 			String line = br.readLine();
 	        while (line != null) {
 	        	if (line.contains("PTOLEMY_LOG")) {
-
-	        		StringToken[] tuple = new StringToken[2];
+	        		Token tokens[] = new Token[labels.length];
+	        		//StringToken[] tuple = new StringToken[2];
 	        		StringTokenizer strTokenizer = new StringTokenizer(line);
 	        		boolean isCommand = false;
 	        		String command = "";
@@ -217,9 +225,13 @@ public class Gem5Wrapper extends SequenceSource {
 	        			String curToken = strTokenizer.nextToken();
 	        			if (isCommand) {
 	        				delay = Integer.parseInt(curToken);
-	        				tuple[0] = new StringToken(command);
-	        				tuple[1] = new StringToken(Integer.toString(delay));
-	        				tokenArray.add(new ArrayToken(BaseType.STRING,tuple));
+	        				tokens[0] = new StringToken(command);
+	        				tokens[1] = new IntToken(delay);
+	        				tokens[2] = new IntToken(delay);
+	        				tokens[3] = new IntToken(delay);
+	        				
+	        				tokenArray.add(new RecordToken(labels, tokens));
+	        				//tokenArray.add(new ArrayToken(BaseType.STRING,tuple));
 	        				isCommand = false;
 	        			}
 	        			if (curToken.contains("PRE") || curToken.contains("ACT")
@@ -239,21 +251,26 @@ public class Gem5Wrapper extends SequenceSource {
 			e.printStackTrace();
 		}
 				
-        StringToken stringToken = new StringToken("*************Iteration Count: " + _iterationCount + "\n" + sb.toString());
-        //ArrayToken[] tokenArr = new ArrayToken[tokenArray.size()];
-		//tokenArr = tokenArray.toArray(tokenArr);
-        ArrayToken[] dummy = new ArrayToken[0];
-        StringToken[] temp = new StringToken[1];
-        //temp[0] = new StringToken("hokeun");
-		ArrayToken arrayToken = new ArrayToken(tokenArray.toArray(dummy));
-		//ArrayToken arrayToken = new ArrayToken(BaseType.STRING, temp);
-		//new ArrayToken()
-		output.setAutomaticTypeConversion(true);
-		//output.setTypeAtLeast(arrayToken.getType());
+        //StringToken stringToken = new StringToken("*************Iteration Count: " + _iterationCount + "\n" + sb.toString());
+        Token[] dummy = new Token[0];
+		return new ArrayToken(tokenArray.toArray(dummy));
+    }
+    
+    /** Send the current value of the state of this actor to the output.
+     *  @exception IllegalActionException If calling send() or super.fire()
+     *  throws it.
+     */
+    public void fire() throws IllegalActionException {
+  	
+        //init.update();
+        super.fire();
 
-        ArrayType commandType = new ArrayType(BaseType.STRING, 2);
-        ArrayType arrayOfCommandsType = new ArrayType(commandType, arrayToken.length());
-		output.setTypeEquals(arrayOfCommandsType);
+		//RecordType commandType = new RecordType(labels, types);
+		//arrayToken = getGem5SimResult();
+        //ArrayType arrayOfCommandsType = new ArrayType(BaseType.RECORD, arrayToken.length());
+        
+        
+		//output.setTypeEquals(arrayOfCommandsType);
         output.send(0, arrayToken);
         _iterationCount++;
     }
@@ -265,7 +282,10 @@ public class Gem5Wrapper extends SequenceSource {
      */
     public void initialize() throws IllegalActionException {
         super.initialize();
-        _stateToken = output.getType().convert(init.getToken());
+        //ArrayType arrayOfCommandsType = new ArrayType(BaseType.RECORD, 318);
+		//output.setTypeEquals(arrayOfCommandsType);//(arrayOfCommandsType.getElementTypeTerm());
+		//output.setAutomaticTypeConversion(false);
+        //_stateToken = output.getType().convert(init.getToken());
 
         try {
         	if (process != null) {
@@ -306,6 +326,10 @@ public class Gem5Wrapper extends SequenceSource {
                     "No pipe file! in "
                             + getFullName());
 		}
+        
+		arrayToken = getGem5SimResult();
+        //ArrayType arrayOfCommandsType = new ArrayType(BaseType.RECORD, arrayToken.length());        
+		//output.setTypeEquals(arrayOfCommandsType);
     }
 
     /** Invoke a specified number of iterations of this actor. Each
@@ -327,51 +351,6 @@ public class Gem5Wrapper extends SequenceSource {
      *  @exception IllegalActionException If iterating cannot be
      *  performed.
      */
-    public int iterate(int count) throws IllegalActionException {
-        // Check whether we need to reallocate the output token array.
-        if (count > _resultArray.length) {
-            _resultArray = new Token[count];
-        }
-
-        // Consume any trigger inputs.
-        // NOTE: It might seem that using trigger.numberOfSources() is
-        // correct here, but it is not. It is possible for channels
-        // to be connected, for example, to other output ports or
-        // even back to this same trigger port, in which case higher
-        // numbered channels will not have their inputs read.
-        for (int i = 0; i < trigger.getWidth(); i++) {
-            if (trigger.hasToken(i, count)) {
-                trigger.get(i, count);
-            }
-        }
-
-        for (int i = 0; i < count; i++) {
-            _resultArray[i] = _stateToken;
-
-            try {
-                step.update();
-                init.update();
-                _stateToken = _stateToken.add(step.getToken());
-            } catch (IllegalActionException ex) {
-                throw new InternalErrorException(this, ex,
-                        "Should not be thrown because we have already "
-                                + "verified that the tokens can be added");
-            }
-        }
-
-        output.send(0, _resultArray, count);
-
-        if (_firingCountLimit != 0) {
-            _iterationCount += count;
-
-            if (_iterationCount >= _firingCountLimit) {
-                return STOP_ITERATING;
-            }
-        }
-
-        return COMPLETED;
-    }
-
     /** Update the state of the actor by adding the value of the
      *  <i>step</i> parameter to the state.  Also, increment the
      *  iteration count, and if the result is equal to
@@ -382,8 +361,7 @@ public class Gem5Wrapper extends SequenceSource {
      *   has an invalid expression.
      */
     public boolean postfire() throws IllegalActionException {
-        step.update();
-        _stateToken = _stateToken.add(step.getToken());
+        //_stateToken = _stateToken.add(step.getToken());
         
 		try {
 			os.newLine();
@@ -392,18 +370,19 @@ public class Gem5Wrapper extends SequenceSource {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
         
+		arrayToken = getGem5SimResult();
+        //ArrayType arrayOfCommandsType = new ArrayType(BaseType.RECORD, arrayToken.length());        
+		//output.setTypeEquals(arrayOfCommandsType);
         return super.postfire();
     }
 
     ///////////////////////////////////////////////////////////////////
     ////                         private variables                 ////
-    private Token _stateToken = null;
-
-    private Token[] _resultArray;
-
     private BufferedReader br;
     private Process process;
     private BufferedWriter os;
     private InputStreamReader is;
+    private ArrayToken arrayToken;
 }
