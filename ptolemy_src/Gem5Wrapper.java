@@ -30,7 +30,10 @@ package dummy;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
+import java.util.Collections;
+import java.util.Comparator;
 
+import net.sf.saxon.functions.Substring;
 import ptolemy.data.type.*;
 import ptolemy.data.type.BaseType.GeneralType;
 import ptolemy.actor.Manager;
@@ -171,7 +174,6 @@ public class Gem5Wrapper extends SequenceSource {
     }
 
     private ArrayToken getGem5SimResult() throws IllegalActionException {
-
     	try {
         	int line;
 	        while (true) {
@@ -194,26 +196,57 @@ public class Gem5Wrapper extends SequenceSource {
 	        		Token tokens[] = new Token[_labels.length];
 	        		//StringToken[] tuple = new StringToken[2];
 	        		StringTokenizer strTokenizer = new StringTokenizer(line);
-	        		boolean isCommand = false;
 	        		String command = "";
-	        		int delay = 0;
+	        		int commandTime = 0;
+	        		int serviceTime = 0;
+	        		int rankNum = -1;
+	        		int bankNum = -1;
+	        		int initTime = 0;
+	        		boolean isFirstToken = true;
+	        		boolean isCommand = false;
+	        		boolean isRank = false;
+	        		boolean isBank = false;
 	        		while (strTokenizer.hasMoreTokens()) {
 	        			String curToken = strTokenizer.nextToken();
-	        			if (isCommand) {
-	        				delay = Integer.parseInt(curToken);
+	        			if (isFirstToken) {
+	        				isFirstToken = false;
+	        				int cpuInitTime = Integer.parseInt(curToken.substring(0, curToken.length() - 1));
+	        				initTime = ((cpuInitTime + _systemClkPeriod) / _systemClkPeriod); // in ns
+	        				serviceTime = initTime % _sampleTime;
+	        			}
+	        			else if (curToken.contains("Rank")) {
+	        				isRank = true;
+	        			}
+	        			else if (isRank) {
+	        				isRank = false;
+	        				rankNum = Integer.parseInt(curToken.substring(0, curToken.length()));
+	        			}
+	        			else if (curToken.contains("Bank")) {
+	        				isBank = true;
+	        			}
+	        			else if (isBank) {
+	        				isBank = false;
+	        				bankNum = Integer.parseInt(curToken.substring(0, curToken.length()));
+	        			}
+	        			else if (curToken.contains("PRE") || curToken.contains("ACT")
+	        					|| curToken.contains("READ") || curToken.contains("WRITE")) {
+	        				isCommand = true;
+	        				command = new String(curToken.substring(0, curToken.length() - 1));
+	        			}
+	        			else if (isCommand) {
+	        				isCommand = false;
+	        				// from previous delay
+	        				int delayDiff = Integer.parseInt(curToken);
+	        				delayDiff = ((delayDiff + _systemClkPeriod) / _systemClkPeriod); // in ns
+	        				commandTime += delayDiff;
 	        				tokens[0] = new StringToken(command);
-	        				tokens[1] = new IntToken(delay);
-	        				tokens[2] = new IntToken(delay);
-	        				tokens[3] = new IntToken(delay);
+	        				tokens[1] = new IntToken(initTime + commandTime);
+	        				tokens[2] = new IntToken(rankNum);
+	        				tokens[3] = new IntToken(bankNum);
+	        				tokens[4] = new IntToken(serviceTime + commandTime);
 	        				
 	        				tokenArray.add(new RecordToken(_labels, tokens));
 	        				//tokenArray.add(new ArrayToken(BaseType.STRING,tuple));
-	        				isCommand = false;
-	        			}
-	        			if (curToken.contains("PRE") || curToken.contains("ACT")
-	        					|| curToken.contains("READ") || curToken.contains("WRITE")) {
-	        				command = new String(curToken);
-	        				isCommand = true;
 	        			}
 	        		}
 		            sb.append(line);
@@ -226,7 +259,9 @@ public class Gem5Wrapper extends SequenceSource {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-				
+		
+		Collections.sort(tokenArray, new SortByCommandTime());
+		
         //StringToken stringToken = new StringToken("*************Iteration Count: " + _iterationCount + "\n" + sb.toString());
         Token[] dummy = new Token[0];
 		return new ArrayToken(tokenArray.toArray(dummy));
@@ -342,6 +377,16 @@ public class Gem5Wrapper extends SequenceSource {
     private BufferedWriter os;
     private InputStreamReader is;
     private ArrayToken arrayToken;
-	private String[] _labels = {"cmd", "time", "rank", "bank"};
-	private Type[] _types = {BaseType.STRING, BaseType.INT, BaseType.INT, BaseType.INT};
+	private String[] _labels = {"cmd", "cmd_time", "rank", "bank", "service_time"};
+	private Type[] _types = {BaseType.STRING, BaseType.INT, BaseType.INT, BaseType.INT, BaseType.INT};
+	private int _systemClkPeriod = 1000;
+	private int _sampleTime = 10000;	// 10 us
+	
+	public class SortByCommandTime implements Comparator<RecordToken> {
+		public int compare(RecordToken t1, RecordToken t2) {
+			int time1 = ((IntToken)t1.get(_labels[1])).intValue();
+			int time2 = ((IntToken)t2.get(_labels[1])).intValue();
+			return (time1 - time2);
+		}
+	}
 }

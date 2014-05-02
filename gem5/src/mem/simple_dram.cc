@@ -937,7 +937,7 @@ SimpleDRAM::estimateLatency(DRAMPacket* dram_pkt, Tick inTime)
                accLat += tCL;
                bankLat += tCL;
             }
-            DPRINTF(DRAM, "PTOLEMY_LOG: Rank: %d Bank:%d %s: %d\n",
+            DPRINTF(DRAM, "PTOLEMY_LOG: Rank: %d Bank: %d %s: %d\n",
                 dram_pkt->rank, dram_pkt->bank, commandStr.c_str(), 0);
 
         } else {
@@ -962,12 +962,12 @@ SimpleDRAM::estimateLatency(DRAMPacket* dram_pkt, Tick inTime)
             bankLat += precharge_delay + tRCD + tCL;
             // Hokeun - recording memory commands
             if (precharge_delay == 0) {
-              DPRINTF(DRAM, "PTOLEMY_LOG: Rank: %d Bank:%d ACT: %d %s: %d\n",
+              DPRINTF(DRAM, "PTOLEMY_LOG: Rank: %d Bank: %d ACT: %d %s: %d\n",
                   dram_pkt->rank, dram_pkt->bank, 0, commandStr.c_str(), tRCD);
             }
             else {
-              DPRINTF(DRAM, "PTOLEMY_LOG: Rank: %d Bank:%d PRE: %d ACT: %d %s: %d\n",
-                  dram_pkt->rank, dram_pkt->bank, 0, precharge_delay, commandStr.c_str(), precharge_delay + tRCD);
+              DPRINTF(DRAM, "PTOLEMY_LOG: Rank: %d Bank: %d PRE: %d ACT: %d %s: %d\n",
+                  dram_pkt->rank, dram_pkt->bank, 0, precharge_delay, commandStr.c_str(), tRCD);
             }
         }
     } else if (pageMgmt == Enums::close) {
@@ -987,7 +987,7 @@ SimpleDRAM::estimateLatency(DRAMPacket* dram_pkt, Tick inTime)
         bankLat += tRCD + tCL;
 
         // Hokeun - recording memory commands
-        DPRINTF(DRAM, "PTOLEMY_LOG: Rank: %d Bank:%d ACT: %d %s: %d PRE: %d\n",
+        DPRINTF(DRAM, "PTOLEMY_LOG: Rank: %d Bank: %d ACT: %d %s: %d PRE: %d\n",
             dram_pkt->rank, dram_pkt->bank, 0, commandStr.c_str(), tRCD, tRAS);
     } else
         panic("No page management policy chosen\n");
