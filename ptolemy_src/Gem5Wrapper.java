@@ -103,13 +103,8 @@ public class Gem5Wrapper extends SequenceSource {
         new Parameter(step.getPort(), "_showName", BooleanToken.TRUE);
         
         // set the type constraints.
-        //output.setTypeAtLeast(init);
-        //output.setTypeAtLeast(step);
         ArrayType arrayOfCommandsType = new ArrayType(BaseType.GENERAL, 318);
-		//output.setTypeEquals(arrayOfCommandsType);
-    	String[] labels = {"cmd", "time", "rank", "bank"};
-    	Type[] types = {BaseType.STRING, BaseType.INT, BaseType.INT, BaseType.INT};
-        RecordType recordType = new RecordType(labels, types);
+        RecordType recordType = new RecordType(_labels, _types);
         ArrayType arrayOfRecordsType = new ArrayType(recordType);
         output.setTypeEquals(arrayOfRecordsType);
         output.setAutomaticTypeConversion(false);
@@ -156,23 +151,6 @@ public class Gem5Wrapper extends SequenceSource {
     public void attributeChanged(Attribute attribute)
             throws IllegalActionException {
         super.attributeChanged(attribute);
-    	/*
-        if (attribute == init) {
-            // If type resolution has happened (the model is running),
-            // then update the current state.
-            Manager manager = getManager();
-            if (manager != null) {
-                Manager.State state = manager.getState();
-                if (state == Manager.ITERATING || state == Manager.PAUSED
-                        || state == Manager.PAUSED_ON_BREAKPOINT) {
-                    _stateToken = output.getType().convert(init.getToken());
-                }
-            }
-        } 
-        else {
-            super.attributeChanged(attribute);
-        }
-        */
     }
 
     /** Clone the actor into the specified workspace. This calls the
@@ -207,15 +185,13 @@ public class Gem5Wrapper extends SequenceSource {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    	String[] labels = {"cmd", "time", "rank", "bank"};
-    	Type[] types = {BaseType.STRING, BaseType.INT, BaseType.INT, BaseType.INT};
 		StringBuilder sb = new StringBuilder();
         ArrayList<RecordToken> tokenArray = new ArrayList<RecordToken>();
 		try {
 			String line = br.readLine();
 	        while (line != null) {
 	        	if (line.contains("PTOLEMY_LOG")) {
-	        		Token tokens[] = new Token[labels.length];
+	        		Token tokens[] = new Token[_labels.length];
 	        		//StringToken[] tuple = new StringToken[2];
 	        		StringTokenizer strTokenizer = new StringTokenizer(line);
 	        		boolean isCommand = false;
@@ -230,7 +206,7 @@ public class Gem5Wrapper extends SequenceSource {
 	        				tokens[2] = new IntToken(delay);
 	        				tokens[3] = new IntToken(delay);
 	        				
-	        				tokenArray.add(new RecordToken(labels, tokens));
+	        				tokenArray.add(new RecordToken(_labels, tokens));
 	        				//tokenArray.add(new ArrayToken(BaseType.STRING,tuple));
 	        				isCommand = false;
 	        			}
@@ -261,16 +237,10 @@ public class Gem5Wrapper extends SequenceSource {
      *  throws it.
      */
     public void fire() throws IllegalActionException {
-  	
-        //init.update();
-        super.fire();
+  	    super.fire();
+        
+		arrayToken = getGem5SimResult();
 
-		//RecordType commandType = new RecordType(labels, types);
-		//arrayToken = getGem5SimResult();
-        //ArrayType arrayOfCommandsType = new ArrayType(BaseType.RECORD, arrayToken.length());
-        
-        
-		//output.setTypeEquals(arrayOfCommandsType);
         output.send(0, arrayToken);
         _iterationCount++;
     }
@@ -282,10 +252,6 @@ public class Gem5Wrapper extends SequenceSource {
      */
     public void initialize() throws IllegalActionException {
         super.initialize();
-        //ArrayType arrayOfCommandsType = new ArrayType(BaseType.RECORD, 318);
-		//output.setTypeEquals(arrayOfCommandsType);//(arrayOfCommandsType.getElementTypeTerm());
-		//output.setAutomaticTypeConversion(false);
-        //_stateToken = output.getType().convert(init.getToken());
 
         try {
         	if (process != null) {
@@ -326,10 +292,6 @@ public class Gem5Wrapper extends SequenceSource {
                     "No pipe file! in "
                             + getFullName());
 		}
-        
-		arrayToken = getGem5SimResult();
-        //ArrayType arrayOfCommandsType = new ArrayType(BaseType.RECORD, arrayToken.length());        
-		//output.setTypeEquals(arrayOfCommandsType);
     }
 
     /** Invoke a specified number of iterations of this actor. Each
@@ -370,11 +332,6 @@ public class Gem5Wrapper extends SequenceSource {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-        
-		arrayToken = getGem5SimResult();
-        //ArrayType arrayOfCommandsType = new ArrayType(BaseType.RECORD, arrayToken.length());        
-		//output.setTypeEquals(arrayOfCommandsType);
         return super.postfire();
     }
 
@@ -385,4 +342,6 @@ public class Gem5Wrapper extends SequenceSource {
     private BufferedWriter os;
     private InputStreamReader is;
     private ArrayToken arrayToken;
+	private String[] _labels = {"cmd", "time", "rank", "bank"};
+	private Type[] _types = {BaseType.STRING, BaseType.INT, BaseType.INT, BaseType.INT};
 }
