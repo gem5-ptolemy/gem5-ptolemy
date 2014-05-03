@@ -17,7 +17,7 @@ conf_opt += " --cpu-type=arm_detailed"
 conf_opt += " --cpu-clock=2GHz --sys-clock=1GHz"
 #conf_opt += " --cpu-type=TimingSimpleCPU"
 conf_opt += " --caches"
-conf_opt += " --l1i_size=32kB --l1d_size=64kB"
+conf_opt += " --l1i_size=8kB --l1d_size=8kB"
 conf_opt += " --mem-type=DDR3_1600_x64"
 #conf_opt += " --ruby"
 
