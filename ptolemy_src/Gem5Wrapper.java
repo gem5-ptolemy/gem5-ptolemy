@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 import java.util.Collections;
 import java.util.Comparator;
+import java.math.BigInteger;
 
 import net.sf.saxon.functions.Substring;
 import ptolemy.data.type.*;
@@ -210,8 +211,9 @@ public class Gem5Wrapper extends SequenceSource {
 	        			String curToken = strTokenizer.nextToken();
 	        			if (isFirstToken) {
 	        				isFirstToken = false;
-	        				int cpuInitTime = Integer.parseInt(curToken.substring(0, curToken.length() - 1));
-	        				initTime = ((cpuInitTime + _systemClkPeriod) / _systemClkPeriod); // in ns
+	        				
+	        				long cpuInitTime = Long.parseLong(curToken.substring(0, curToken.length() - 1));
+	        				initTime = (int)((cpuInitTime + _systemClkPeriod) / _systemClkPeriod); // in ns
 	        				serviceTime = initTime % _sampleTime;
 	        			}
 	        			else if (curToken.contains("Rank")) {
@@ -264,7 +266,12 @@ public class Gem5Wrapper extends SequenceSource {
 		
         //StringToken stringToken = new StringToken("*************Iteration Count: " + _iterationCount + "\n" + sb.toString());
         Token[] dummy = new Token[0];
-		return new ArrayToken(tokenArray.toArray(dummy));
+        if (tokenArray.isEmpty()) {
+        	return null;
+        }
+        else {
+    		return new ArrayToken(tokenArray.toArray(dummy));
+        }
     }
     
     /** Send the current value of the state of this actor to the output.
@@ -275,8 +282,9 @@ public class Gem5Wrapper extends SequenceSource {
   	    super.fire();
         
 		arrayToken = getGem5SimResult();
-
-        output.send(0, arrayToken);
+		if (arrayToken != null) {
+			output.send(0, arrayToken);
+		}
         _iterationCount++;
     }
 
@@ -380,7 +388,7 @@ public class Gem5Wrapper extends SequenceSource {
 	private String[] _labels = {"cmd", "cmd_time", "rank", "bank", "service_time"};
 	private Type[] _types = {BaseType.STRING, BaseType.INT, BaseType.INT, BaseType.INT, BaseType.INT};
 	private int _systemClkPeriod = 1000;
-	private int _sampleTime = 10000;	// 10 us
+	private int _sampleTime = 500 * 1000;	// 0.5 ms
 	
 	public class SortByCommandTime implements Comparator<RecordToken> {
 		public int compare(RecordToken t1, RecordToken t2) {

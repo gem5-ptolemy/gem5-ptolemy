@@ -763,7 +763,7 @@ def run_interactive(options, root, testsys, cpu_class, pipe_name, step_size, ite
       os.read(read_fifo, 256)
       os.close(read_fifo)
       print 'iteration: ' + str(i+0)
-      m5.simulate(step_size * 500)
+      m5.simulate(step_size * 1000)
       print 'iteration ' + str(i+0) + ' finished'
       write_fifo = os.open(write_fifo_name, os.O_WRONLY)
       os.write(write_fifo, 'finished')
