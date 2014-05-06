@@ -23,10 +23,9 @@ conf_opt += " --mem-type=DDR3_1600_x64"
 #conf_opt += " --ruby"
 
 #exe = " -c ../wcet_bench/matmult.o"
-#exe = " -c $MIBENCH_BIN/network/dijkstra/dijkstra_large"
-#exe += " -o $MIBENCH_BIN/network/dijkstra/input.dat"
-#exe = " -c $MIBENCH_BIN/consumer/jpeg/cjpeg"
-#exe += " -o \"-dct int -progressive -opt -outfile $MIBENCH_BIN/consumer/jpeg/output_large_encode.jpeg $MIBENCH_BIN/consumer/jpeg/input_large.ppm\""
+
+exe = " -c $MIBENCH_BIN/consumer/jpeg/cjpeg"
+exe += " -o \"-dct int -progressive -opt -outfile $MIBENCH_BIN/consumer/jpeg/output_large_encode.jpeg $MIBENCH_BIN/consumer/jpeg/input_large.ppm\""
 
 #exe = " -c $MIBENCH_BIN/security/rijndael/rijndael"
 #exe += " -o \"$MIBENCH_BIN/security/rijndael/input_large.asc $MIBENCH_BIN/security/rijndael/output_large.enc \
@@ -43,7 +42,7 @@ conf_opt += " --mem-type=DDR3_1600_x64"
 #exe = " -c $MIBENCH_BIN/network/patricia/patricia"
 #exe += " -o \"$MIBENCH_BIN/network/patricia/large.udp\""
 
-exe = " -c $MIBENCH_BIN/automotive/basicmath/basicmath_large"
+#exe = " -c $MIBENCH_BIN/automotive/basicmath/basicmath_large"
 
 #exe = " -c $MIBENCH_BIN/consumer/jpeg/djpeg"
 #exe += " -o \"-dct int -ppm -outfile $MIBENCH_BIN/consumer/jpeg/output_small_decode.ppm $MIBENCH_BIN/consumer/jpeg/input_small.jpg\""
