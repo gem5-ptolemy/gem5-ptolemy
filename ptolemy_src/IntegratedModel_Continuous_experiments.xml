@@ -1,16 +1,16 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE entity PUBLIC "-//UC Berkeley//DTD MoML 1//EN"
     "http://ptolemy.eecs.berkeley.edu/xml/dtd/MoML_1.dtd">
-<entity name="IntegratedModel_Continuous" class="ptolemy.actor.TypedCompositeActor">
+<entity name="IntegratedModel_Continuous_experiments" class="ptolemy.actor.TypedCompositeActor">
     <property name="_createdBy" class="ptolemy.kernel.attributes.VersionAttribute" value="10.0.devel">
     </property>
-    <property name="_windowProperties" class="ptolemy.actor.gui.WindowPropertiesAttribute" value="{bounds={0, 83, 1440, 817}, maximized=false}">
+    <property name="_windowProperties" class="ptolemy.actor.gui.WindowPropertiesAttribute" value="{bounds={371, 84, 2038, 1169}, maximized=false}">
     </property>
-    <property name="_vergilSize" class="ptolemy.actor.gui.SizeAttribute" value="[1206, 707]">
+    <property name="_vergilSize" class="ptolemy.actor.gui.SizeAttribute" value="[1804, 1059]">
     </property>
     <property name="_vergilZoomFactor" class="ptolemy.data.expr.ExpertParameter" value="1.2974820191423082">
     </property>
-    <property name="_vergilCenter" class="ptolemy.data.expr.ExpertParameter" value="{402.12758243741985, 300.65023643092167}">
+    <property name="_vergilCenter" class="ptolemy.data.expr.ExpertParameter" value="{632.5739359041537, 436.2975883043169}">
     </property>
     <property name="Annotation2" class="ptolemy.vergil.kernel.attributes.TextAttribute">
         <property name="text" class="ptolemy.kernel.util.StringAttribute" value="time is in sec">
@@ -90,7 +90,7 @@
     </property>
     <property name="_hideName" class="ptolemy.data.expr.SingletonParameter" value="false">
     </property>
-    <property name="downSamplingFactor" class="ptolemy.data.expr.Parameter" value="1000">
+    <property name="downSamplingFactor" class="ptolemy.data.expr.Parameter" value="200">
         <property name="_hideName" class="ptolemy.kernel.util.SingletonAttribute">
         </property>
         <property name="_icon" class="ptolemy.vergil.icon.ValueIcon">
@@ -107,6 +107,25 @@
         <property name="_editorFactory" class="ptolemy.vergil.toolbox.VisibleParameterEditorFactory">
         </property>
         <property name="_location" class="ptolemy.kernel.util.Location" value="[255.0, 195.0]">
+        </property>
+    </property>
+    <property name="downSamplingFactorForExp" class="ptolemy.data.expr.Parameter" value="50">
+        <property name="_hideName" class="ptolemy.kernel.util.SingletonAttribute">
+        </property>
+        <property name="_icon" class="ptolemy.vergil.icon.ValueIcon">
+            <property name="_color" class="ptolemy.actor.gui.ColorAttribute" value="{0.0, 0.0, 1.0, 1.0}">
+            </property>
+        </property>
+        <property name="_smallIconDescription" class="ptolemy.kernel.util.SingletonConfigurableAttribute">
+            <configure>
+      <svg>
+        <text x="20" style="font-size:14; font-family:SansSerif; fill:blue" y="20">-P-</text>
+      </svg>
+    </configure>
+        </property>
+        <property name="_editorFactory" class="ptolemy.vergil.toolbox.VisibleParameterEditorFactory">
+        </property>
+        <property name="_location" class="ptolemy.kernel.util.Location" value="{260.0, 175.0}">
         </property>
     </property>
     <entity name="Gem5Wrapper" class="dummy.Gem5Wrapper">
@@ -139,9 +158,9 @@
         </property>
     </entity>
     <entity name="DRAMModel" class="ptolemy.actor.TypedCompositeActor">
-        <property name="_location" class="ptolemy.kernel.util.Location" value="[267.5, 400.0]">
+        <property name="_location" class="ptolemy.kernel.util.Location" value="{270.0, 400.0}">
         </property>
-        <property name="_windowProperties" class="ptolemy.actor.gui.WindowPropertiesAttribute" value="{bounds={0, 22, 2560, 1322}, maximized=true}">
+        <property name="_windowProperties" class="ptolemy.actor.gui.WindowPropertiesAttribute" value="{bounds={0, 22, 2560, 1324}, maximized=true}">
         </property>
         <property name="_vergilSize" class="ptolemy.actor.gui.SizeAttribute" value="[1533, 454]">
         </property>
@@ -317,7 +336,7 @@
         <entity name="CmdServer" class="ptolemy.actor.TypedCompositeActor">
             <property name="_location" class="ptolemy.kernel.util.Location" value="[585.0, 260.0]">
             </property>
-            <property name="_windowProperties" class="ptolemy.actor.gui.WindowPropertiesAttribute" value="{bounds={129, 186, 1369, 805}, maximized=false}">
+            <property name="_windowProperties" class="ptolemy.actor.gui.WindowPropertiesAttribute" value="{bounds={71, 95, 1369, 805}, maximized=false}">
             </property>
             <property name="_vergilSize" class="ptolemy.actor.gui.SizeAttribute" value="[1135, 695]">
             </property>
@@ -1243,7 +1262,7 @@
             <property name="_location" class="ptolemy.kernel.util.Location" value="[135.0, 175.0]">
             </property>
         </property>
-        <property name="_windowProperties" class="ptolemy.actor.gui.WindowPropertiesAttribute" value="{bounds={1211, 165, 1945, 949}, maximized=false}">
+        <property name="_windowProperties" class="ptolemy.actor.gui.WindowPropertiesAttribute" value="{bounds={0, 22, 1945, 949}, maximized=false}">
         </property>
         <property name="_vergilSize" class="ptolemy.actor.gui.SizeAttribute" value="[1711, 839]">
         </property>
@@ -1352,7 +1371,7 @@
         <entity name="AMBPowerToTemp" class="ptolemy.actor.TypedCompositeActor">
             <property name="_location" class="ptolemy.kernel.util.Location" value="[355.0, 600.0]">
             </property>
-            <property name="_windowProperties" class="ptolemy.actor.gui.WindowPropertiesAttribute" value="{bounds={1012, 350, 1544, 797}, maximized=false}">
+            <property name="_windowProperties" class="ptolemy.actor.gui.WindowPropertiesAttribute" value="{bounds={0, 103, 1544, 797}, maximized=false}">
             </property>
             <property name="_vergilSize" class="ptolemy.actor.gui.SizeAttribute" value="[1310, 687]">
             </property>
@@ -1588,7 +1607,7 @@
         <entity name="DRAMPowerToTemp" class="ptolemy.actor.TypedCompositeActor">
             <property name="_location" class="ptolemy.kernel.util.Location" value="[610.0, 495.0]">
             </property>
-            <property name="_windowProperties" class="ptolemy.actor.gui.WindowPropertiesAttribute" value="{bounds={1036, 335, 1920, 970}, maximized=false}">
+            <property name="_windowProperties" class="ptolemy.actor.gui.WindowPropertiesAttribute" value="{bounds={0, 22, 1920, 970}, maximized=false}">
             </property>
             <property name="_vergilSize" class="ptolemy.actor.gui.SizeAttribute" value="[1686, 860]">
             </property>
@@ -1960,7 +1979,7 @@
         <link relation1="relation20" relation2="relation21"/>
     </entity>
     <entity name="AMBTemperaturePlotter" class="ptolemy.actor.lib.gui.TimedPlotter">
-        <property name="_windowProperties" class="ptolemy.actor.gui.WindowPropertiesAttribute" value="{bounds={58, 622, 1050, 634}, maximized=false}">
+        <property name="_windowProperties" class="ptolemy.actor.gui.WindowPropertiesAttribute" value="{bounds={58, 266, 1050, 634}, maximized=false}">
         </property>
         <property name="_plotSize" class="ptolemy.actor.gui.SizeAttribute" value="[1050, 590]">
         </property>
@@ -1979,7 +1998,7 @@
         </configure>
     </entity>
     <entity name="DramTemperaturePlotter" class="ptolemy.actor.lib.gui.TimedPlotter">
-        <property name="_windowProperties" class="ptolemy.actor.gui.WindowPropertiesAttribute" value="{bounds={606, 764, 1010, 473}, maximized=false}">
+        <property name="_windowProperties" class="ptolemy.actor.gui.WindowPropertiesAttribute" value="{bounds={430, 427, 1010, 473}, maximized=false}">
         </property>
         <property name="_plotSize" class="ptolemy.actor.gui.SizeAttribute" value="[1010, 429]">
         </property>
@@ -2017,7 +2036,7 @@
         </configure>
     </entity>
     <entity name="DRAMPower" class="ptolemy.actor.lib.gui.TimedPlotter">
-        <property name="_windowProperties" class="ptolemy.actor.gui.WindowPropertiesAttribute" value="{bounds={881, 205, 937, 570}, maximized=false}">
+        <property name="_windowProperties" class="ptolemy.actor.gui.WindowPropertiesAttribute" value="{bounds={213, 220, 937, 570}, maximized=false}">
         </property>
         <property name="_plotSize" class="ptolemy.actor.gui.SizeAttribute" value="[937, 526]">
         </property>
@@ -2047,6 +2066,78 @@
         <property name="_location" class="ptolemy.kernel.util.Location" value="[385.0, 430.0]">
         </property>
     </entity>
+    <entity name="AMBTemperatureMax" class="ptolemy.actor.lib.gui.Display">
+        <property name="_windowProperties" class="ptolemy.actor.gui.WindowPropertiesAttribute" value="{bounds={50, 930, 484, 208}, maximized=false}">
+        </property>
+        <property name="_paneSize" class="ptolemy.actor.gui.SizeAttribute" value="[484, 164]">
+        </property>
+        <property name="_location" class="ptolemy.kernel.util.Location" value="[1045.0, 80.0]">
+        </property>
+    </entity>
+    <entity name="DRAMTemperatureMax" class="ptolemy.actor.lib.gui.Display">
+        <property name="_windowProperties" class="ptolemy.actor.gui.WindowPropertiesAttribute" value="{bounds={405, 1042, 484, 208}, maximized=false}">
+        </property>
+        <property name="_paneSize" class="ptolemy.actor.gui.SizeAttribute" value="[484, 164]">
+        </property>
+        <property name="_location" class="ptolemy.kernel.util.Location" value="[1050.0, 140.0]">
+        </property>
+    </entity>
+    <entity name="DownSample3" class="ptolemy.domains.sdf.lib.DownSample">
+        <property name="factor" class="ptolemy.data.expr.Parameter" value="downSamplingFactorForExp">
+        </property>
+        <property name="_location" class="ptolemy.kernel.util.Location" value="[935.0, 80.0]">
+        </property>
+    </entity>
+    <entity name="DownSample4" class="ptolemy.domains.sdf.lib.DownSample">
+        <property name="factor" class="ptolemy.data.expr.Parameter" value="downSamplingFactorForExp">
+        </property>
+        <property name="_location" class="ptolemy.kernel.util.Location" value="[941.5855407714844, 139.234619140625]">
+        </property>
+    </entity>
+    <entity name="RunningMaximum" class="ptolemy.actor.lib.RunningMaximum">
+        <property name="_location" class="ptolemy.kernel.util.Location" value="[835.0, 80.0]">
+        </property>
+    </entity>
+    <entity name="RunningMaximum2" class="ptolemy.actor.lib.RunningMaximum">
+        <property name="_location" class="ptolemy.kernel.util.Location" value="[850.0, 140.0]">
+        </property>
+    </entity>
+    <entity name="DRAMPowerAvg" class="ptolemy.actor.lib.gui.Display">
+        <property name="_windowProperties" class="ptolemy.actor.gui.WindowPropertiesAttribute" value="{bounds={480, 801, 484, 208}, maximized=false}">
+        </property>
+        <property name="_paneSize" class="ptolemy.actor.gui.SizeAttribute" value="[484, 164]">
+        </property>
+        <property name="_location" class="ptolemy.kernel.util.Location" value="[885.0, 245.0]">
+        </property>
+    </entity>
+    <entity name="AMBPowerAvg" class="ptolemy.actor.lib.gui.Display">
+        <property name="_windowProperties" class="ptolemy.actor.gui.WindowPropertiesAttribute" value="{bounds={1175, 959, 484, 208}, maximized=false}">
+        </property>
+        <property name="_paneSize" class="ptolemy.actor.gui.SizeAttribute" value="[484, 164]">
+        </property>
+        <property name="_location" class="ptolemy.kernel.util.Location" value="[955.0, 215.0]">
+        </property>
+    </entity>
+    <entity name="DownSample5" class="ptolemy.domains.sdf.lib.DownSample">
+        <property name="factor" class="ptolemy.data.expr.Parameter" value="downSamplingFactorForExp">
+        </property>
+        <property name="_location" class="ptolemy.kernel.util.Location" value="[719.3274230957031, 205.78125]">
+        </property>
+    </entity>
+    <entity name="DownSample6" class="ptolemy.domains.sdf.lib.DownSample">
+        <property name="factor" class="ptolemy.data.expr.Parameter" value="downSamplingFactorForExp">
+        </property>
+        <property name="_location" class="ptolemy.kernel.util.Location" value="[690.0, 255.0]">
+        </property>
+    </entity>
+    <entity name="Average" class="ptolemy.actor.lib.Average">
+        <property name="_location" class="ptolemy.kernel.util.Location" value="[820.0, 210.0]">
+        </property>
+    </entity>
+    <entity name="Average2" class="ptolemy.actor.lib.Average">
+        <property name="_location" class="ptolemy.kernel.util.Location" value="[770.0, 255.0]">
+        </property>
+    </entity>
     <relation name="relation2" class="ptolemy.actor.TypedIORelation">
     </relation>
     <relation name="relation" class="ptolemy.actor.TypedIORelation">
@@ -2066,30 +2157,46 @@
     <relation name="relation9" class="ptolemy.actor.TypedIORelation">
         <property name="width" class="ptolemy.data.expr.Parameter" value="-1">
         </property>
-        <vertex name="vertex1" value="[570.0, 380.0]">
+        <vertex name="vertex1" value="[545.0, 380.0]">
         </vertex>
     </relation>
     <relation name="relation4" class="ptolemy.actor.TypedIORelation">
         <property name="width" class="ptolemy.data.expr.Parameter" value="-1">
         </property>
-        <vertex name="vertex1" value="[615.0, 390.0]">
+        <vertex name="vertex1" value="[560.0, 390.0]">
         </vertex>
     </relation>
     <relation name="relation6" class="ptolemy.actor.TypedIORelation">
         <property name="width" class="ptolemy.data.expr.Parameter" value="-1">
         </property>
-        <vertex name="vertex1" value="[615.0, 410.0]">
+        <vertex name="vertex1" value="[580.0, 410.0]">
         </vertex>
     </relation>
     <relation name="relation12" class="ptolemy.actor.TypedIORelation">
         <property name="width" class="ptolemy.data.expr.Parameter" value="-1">
         </property>
-        <vertex name="vertex1" value="[570.0, 420.0]">
+        <vertex name="vertex1" value="[600.0, 420.0]">
         </vertex>
     </relation>
     <relation name="relation7" class="ptolemy.actor.TypedIORelation">
     </relation>
     <relation name="relation8" class="ptolemy.actor.TypedIORelation">
+    </relation>
+    <relation name="relation10" class="ptolemy.actor.TypedIORelation">
+    </relation>
+    <relation name="relation11" class="ptolemy.actor.TypedIORelation">
+    </relation>
+    <relation name="relation13" class="ptolemy.actor.TypedIORelation">
+    </relation>
+    <relation name="relation14" class="ptolemy.actor.TypedIORelation">
+    </relation>
+    <relation name="relation15" class="ptolemy.actor.TypedIORelation">
+    </relation>
+    <relation name="relation16" class="ptolemy.actor.TypedIORelation">
+    </relation>
+    <relation name="relation17" class="ptolemy.actor.TypedIORelation">
+    </relation>
+    <relation name="relation18" class="ptolemy.actor.TypedIORelation">
     </relation>
     <link port="Gem5Wrapper.output" relation="relation"/>
     <link port="Gem5Wrapper.trigger" relation="relation2"/>
@@ -2111,4 +2218,24 @@
     <link port="DownSample.output" relation="relation7"/>
     <link port="DownSample2.input" relation="relation3"/>
     <link port="DownSample2.output" relation="relation8"/>
+    <link port="AMBTemperatureMax.input" relation="relation10"/>
+    <link port="DRAMTemperatureMax.input" relation="relation11"/>
+    <link port="DownSample3.input" relation="relation13"/>
+    <link port="DownSample3.output" relation="relation10"/>
+    <link port="DownSample4.input" relation="relation14"/>
+    <link port="DownSample4.output" relation="relation11"/>
+    <link port="RunningMaximum.input" relation="relation9"/>
+    <link port="RunningMaximum.output" relation="relation13"/>
+    <link port="RunningMaximum2.input" relation="relation4"/>
+    <link port="RunningMaximum2.output" relation="relation14"/>
+    <link port="DRAMPowerAvg.input" relation="relation18"/>
+    <link port="AMBPowerAvg.input" relation="relation16"/>
+    <link port="DownSample5.input" relation="relation6"/>
+    <link port="DownSample5.output" relation="relation15"/>
+    <link port="DownSample6.input" relation="relation12"/>
+    <link port="DownSample6.output" relation="relation17"/>
+    <link port="Average.input" relation="relation15"/>
+    <link port="Average.output" relation="relation16"/>
+    <link port="Average2.input" relation="relation17"/>
+    <link port="Average2.output" relation="relation18"/>
 </entity>
