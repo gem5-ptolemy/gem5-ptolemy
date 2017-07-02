@@ -39,3 +39,16 @@ http://www.gem5.org/Download
 If you have questions, please send mail to gem5-users@gem5.org
 
 Enjoy using gem5 and please share your modifications and extensions.
+
+# By Hokeun Kim
+
+# output files are in m5out
+
+# Inside gem5/configs/example/, compare se.py and interactive.py using diff
+# gem5/interactive_sim.py is the file that executes the gem5 simulator with specified arguments
+# Within the file gem5/configs/common/Simulation.py, "run_interactive" function was created by extending "run" function with three more arguments: pipe_name, step_size, iteration.
+#
+
+
+
+
