@@ -1021,4 +1021,4 @@ def run_interactive(options, root, testsys, cpu_class, pipe_name, step_size, ite
     if not m5.options.interactive:
         sys.exit(exit_event.getCode())
     '''
-# Start by Hokeun Kim
+# End by Hokeun Kim
