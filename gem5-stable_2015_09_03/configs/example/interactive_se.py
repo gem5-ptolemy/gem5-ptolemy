@@ -275,4 +275,6 @@ else:
     MemConfig.config_mem(options, system)
 
 root = Root(full_system = False, system = system)
-Simulation.run(options, root, system, FutureClass)
+cycles =  500 * 1000 # 0.5 ms
+iterations = 200 # total 0.1 s
+Simulation.run_interactive(options, root, system, FutureClass, 'temp_pipe', cycles, iterations)

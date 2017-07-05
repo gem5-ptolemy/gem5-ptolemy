@@ -1053,6 +1053,17 @@ DRAMCtrl::doDRAMAccess(DRAMPacket* dram_pkt)
     DPRINTF(DRAM, "Timing access to addr %lld, rank/bank/row %d %d %d\n",
             dram_pkt->addr, dram_pkt->rank, dram_pkt->bank, dram_pkt->row);
 
+    // Start by Hokeun Kim
+    string commandStr;
+    if (dram_pkt->isRead) {
+      commandStr = "READ";
+    }
+    else {
+      commandStr = "WRITE";
+    }
+    // End by Hokeun Kim
+
+
     // get the rank
     Rank& rank = dram_pkt->rankRef;
 
@@ -1068,13 +1079,29 @@ DRAMCtrl::doDRAMAccess(DRAMPacket* dram_pkt)
     // Determine the access latency and update the bank state
     if (bank.openRow == dram_pkt->row) {
         // nothing to do
+
+        // Start by Hokeun Kim
+        DPRINTF(DRAM, "PTOLEMY_LOG: Rank: %d Bank: %d %s: %d\n",
+            dram_pkt->rank, dram_pkt->bank, commandStr.c_str(), 0);
+        // End by Hokeun Kim
+
     } else {
         row_hit = false;
 
         // If there is a page open, precharge it.
         if (bank.openRow != Bank::NO_ROW) {
             prechargeBank(rank, bank, std::max(bank.preAllowedAt, curTick()));
+            // Start by Hokeun Kim
+            DPRINTF(DRAM, "PTOLEMY_LOG: Rank: %d Bank: %d PRE: %d ACT: %d %s: %d\n",
+                dram_pkt->rank, dram_pkt->bank, 0, tRP, commandStr.c_str(), tRCD);
+            // End by Hokeun Kim
         }
+        // Start by Hokeun Kim
+        else {
+            DPRINTF(DRAM, "PTOLEMY_LOG: Rank: %d Bank: %d ACT: %d %s: %d\n",
+                dram_pkt->rank, dram_pkt->bank, 0, commandStr.c_str(), tRCD);
+        }
+        // End by Hokeun Kim
 
         // next we need to account for the delay in activating the
         // page
@@ -1209,6 +1236,11 @@ DRAMCtrl::doDRAMAccess(DRAMPacket* dram_pkt)
         // if auto-precharge push a PRE command at the correct tick to the
         // list used by DRAMPower library to calculate power
         prechargeBank(rank, bank, std::max(curTick(), bank.preAllowedAt));
+
+        // Start by Hokeun Kim
+        DPRINTF(DRAM, "PTOLEMY_LOG: Rank: %d Bank: %d PRE: %d\n",
+            dram_pkt->rank, dram_pkt->bank, tRAS);
+        // End by Hokeun Kim
 
         DPRINTF(DRAM, "Auto-precharged bank: %d\n", dram_pkt->bankId);
     }
@@ -1672,6 +1704,10 @@ DRAMCtrl::Rank::processRefreshEvent()
             for (auto &b : banks) {
                 if (b.openRow != Bank::NO_ROW) {
                     memory.prechargeBank(*this, b, pre_at, false);
+                    // Start by Hokeun Kim
+                    DPRINTF(DRAM, "PTOLEMY_LOG: Rank: %d Bank: %d PRE: %d\n",
+                        rank, b.bank, 0);
+                    // End by Hokeun Kim
                 } else {
                     b.actAllowedAt = std::max(b.actAllowedAt, act_allowed_at);
                     b.preAllowedAt = std::max(b.preAllowedAt, pre_at);
@@ -1688,6 +1724,9 @@ DRAMCtrl::Rank::processRefreshEvent()
                             memory.timeStampOffset, rank);
         } else {
             DPRINTF(DRAM, "All banks already precharged, starting refresh\n");
+            // Start by Hokeun Kim
+            DPRINTF(DRAM, "PTOLEMY_LOG: REF: %d\n", 0);
+            // End by Hokeun Kim
 
             // go ahead and kick the power state machine into gear if
             // we are already idle
