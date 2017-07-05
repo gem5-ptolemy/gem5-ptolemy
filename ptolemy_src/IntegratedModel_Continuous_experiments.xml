@@ -128,7 +128,7 @@
         <property name="_location" class="ptolemy.kernel.util.Location" value="{260.0, 175.0}">
         </property>
     </property>
-    <entity name="Gem5Wrapper" class="dummy.Gem5Wrapper">
+    <entity name="Gem5Wrapper" class="ptolemy.actor.lib.gem5.Gem5Wrapper">
         <property name="_location" class="ptolemy.kernel.util.Location" value="[170.0, 400.0]">
         </property>
         <property name="_icon" class="ptolemy.vergil.icon.EditorIcon">
