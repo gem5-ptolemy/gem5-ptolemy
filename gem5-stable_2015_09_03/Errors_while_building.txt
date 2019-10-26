@@ -1,0 +1,36 @@
+-------------------------------------------------------------------------------------------------------
+|				Machine Configurations 						                                                            |
+|				**********************						                                                            |
+|												                                                                              |
+|												                                                                              |
+|	Ptolemy version	: Ptolemy II Version 11.0.1_20180619					                                      | 
+|												                                                                              |				
+|	GEM5 git clone 	: https://github.com/gem5-ptolemy/gem5-ptolemy.git 			                            |
+|												                                                                              |
+|	gcc version  	:   7.4.0							                                                                |
+|                                                                                                     |
+|	doing ARM.opt build		                                                                              |
+------------------------------------------------------------------------------------------------------
+
+
+The following are the files in which the bugs were encountered while building the GEM5 simulator  :
+---------------------------------------------------------------------------------------------------
+
+1. utils.h
+      Line 51 : throw(std::runtime_error) 
+      This line has to be removed
+
+2. copy_engine.cc
+     Line 249: pkt->set<uint64_t>(cr.status() | ~busy);
+     ~ replaced by !
+
+3. exec-ns.cc
+     Multiple lines
+     Reason : Else clause does not guard
+     Solved it by adding guard
+
+4. neon64_mem.hh
+      dest->lo = (dest->lo & (~maskBits)) | ((src & sMask) << shiftAmt);
+      Error : dest->lo uninitialized
+      Modified it
+
